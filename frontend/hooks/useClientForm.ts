@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import { clientsApi } from '@/lib/api';
-import { ApiError, Client, CreateClientPayload, UpdateClientPayload } from '@/lib/types';
+import { ApiError, Client, ClientStatus, CreateClientPayload, UpdateClientPayload } from '@/lib/types';
 
 type FormValues = {
   nome: string;
@@ -118,7 +118,7 @@ export function useClientForm(clientId?: string): UseClientFormReturn {
       email: values.email.trim(),
       telefone: values.telefone.trim(),
       documento: values.documento.trim(),
-      status: values.status,
+      status: values.status as ClientStatus,
     };
 
     try {
