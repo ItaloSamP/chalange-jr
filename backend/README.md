@@ -32,8 +32,8 @@ npm run start:dev
 | Variável       | Descrição                          | Padrão                 |
 |----------------|------------------------------------|------------------------|
 | `DATABASE_URL` | Connection string PostgreSQL       | —                      |
-| `PORT`         | Porta da API                       | `3000`                 |
-| `CORS_ORIGIN`  | Origem permitida (frontend)        | `http://localhost:3001`|
+| `PORT`         | Porta da API                       | `3001`                 |
+| `CORS_ORIGIN`  | Origem permitida (frontend)        | `http://localhost:3000`|
 
 ## Implementação pendente
 
