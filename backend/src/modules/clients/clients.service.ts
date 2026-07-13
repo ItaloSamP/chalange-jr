@@ -14,26 +14,61 @@ import { ClientStatus } from './enums/client-status.enum';
 export class ClientsService {
   constructor(private readonly repository: ClientsRepository) {}
 
-  // TODO (candidato): implementar regras
   async create(dto: CreateClientDto) {
-    // email único → ConflictException
-    // documento único → ConflictException
+    const existingEmail = await this.repository.findByEmail(dto.email);
+    if (existingEmail) {
+      throw new ConflictException('Email já cadastrado');
+    }
+
+    const existingDocumento = await this.repository.findByDocumento(dto.documento);
+    if (existingDocumento) {
+      throw new ConflictException('Documento já cadastrado');
+    }
+
+    return this.repository.create(dto);
   }
 
   async findAll(query: ListClientsQueryDto) {
-    // return this.repository.findMany(query);
+    return this.repository.findMany(query);
   }
 
   async findOne(id: string) {
-    // NotFoundException se não existir
+    const client = await this.repository.findById(id);
+    if (!client) {
+      throw new NotFoundException('Cliente não encontrado');
+    }
+    return client;
   }
 
   async update(id: string, dto: UpdateClientDto) {
-    // INACTIVE → ForbiddenException
-    // validar unicidade se email/documento mudarem
+    const client = await this.findOne(id);
+
+    if (client.status === ClientStatus.INACTIVE) {
+      throw new ForbiddenException('Cliente inativo não pode ser editado');
+    }
+
+    if (dto.email && dto.email !== client.email) {
+      const existingEmail = await this.repository.findByEmail(dto.email);
+      if (existingEmail) {
+        throw new ConflictException('Email já cadastrado');
+      }
+    }
+
+    if (dto.documento && dto.documento !== client.documento) {
+      const existingDocumento = await this.repository.findByDocumento(dto.documento);
+      if (existingDocumento) {
+        throw new ConflictException('Documento já cadastrado');
+      }
+    }
+
+    return this.repository.update(id, dto);
   }
 
   async remove(id: string) {
-    // soft delete — status INACTIVE
+    const client = await this.repository.findById(id);
+    if (!client || client.status === ClientStatus.INACTIVE) {
+      throw new NotFoundException('Cliente não encontrado');
+    }
+    return this.repository.softDelete(id);
   }
 }
