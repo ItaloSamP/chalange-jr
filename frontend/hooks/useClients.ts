@@ -52,13 +52,12 @@ export function useClients(): UseClientsReturn {
     setError(null);
     try {
       await clientsApi.remove(id);
-      // Remove from local state and update pagination
-      setClients(prev => prev.filter(c => c.id !== id));
-      setPagination(prev => ({ ...prev, total: prev.total - 1 }));
+      // Refetch from API to reflect server state (soft-delete changes status)
+      await fetchClients();
     } catch (err) {
       throw err; // let caller handle UI feedback
     }
-  }, []);
+  }, [fetchClients]);
 
   const setFilters = useCallback((partial: Partial<ListClientsFilters>) => {
     setFiltersState(prev => {

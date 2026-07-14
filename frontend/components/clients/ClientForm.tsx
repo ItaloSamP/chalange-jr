@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ClientStatus } from '@/lib/types';
+import { formatPhone } from '@/lib/utils';
 
 const SpinnerIcon = () => (
   <svg
@@ -165,6 +166,12 @@ export default function ClientForm({
               type="tel"
               value={values.telefone}
               onChange={(e) => onChange('telefone', e.target.value)}
+              onBlur={() => {
+                const digits = values.telefone.replace(/\D/g, '');
+                if (digits.length >= 10) {
+                  onChange('telefone', formatPhone(values.telefone));
+                }
+              }}
               className={inputClass(!!displayErrors.telefone)}
               placeholder="(11) 99999-9999"
             />

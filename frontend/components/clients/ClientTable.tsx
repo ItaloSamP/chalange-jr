@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Client, ClientStatus } from '@/lib/types';
+import { formatPhone } from '@/lib/utils';
 import StatusBadge from './StatusBadge';
 
 const PencilIcon = () => (
@@ -159,7 +160,7 @@ export default function ClientTable({
           >
             <span className="font-medium text-zinc-900 text-sm truncate">{client.nome}</span>
             <span className="text-zinc-500 text-sm truncate">{client.email}</span>
-            <span className="text-zinc-500 text-sm truncate">{client.telefone}</span>
+            <span className="text-zinc-500 text-sm truncate">{formatPhone(client.telefone)}</span>
             <span className="font-mono text-zinc-500 text-sm truncate">{client.documento}</span>
             <span>
               <StatusBadge status={client.status} />
